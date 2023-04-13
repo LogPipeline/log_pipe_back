@@ -4,6 +4,7 @@
 
 [선순위]
 
+```
 아이피 주소 -> 68.244.124.248 - - 
 날짜 -> [13/Apr/2023:23:22:35 +0900] 
 Method -> "POST /apps/cart.jsp?appID=2081 HTTP/1.0" 
@@ -12,6 +13,7 @@ port number -> 4939
 url -> "http://www.cox.net/privacy/" 
 brower injection - >"Mozilla/5.0 (Windows; U; Windows NT 5.1) AppleWebKit/535.29.1 (KHTML, like Gecko) 
                      Version/5.1 Safari/535.29.1"
+```
 
 사용자 들어온 스펙 -> 수집 후 대시보드
 
@@ -52,3 +54,43 @@ brower injection - >"Mozilla/5.0 (Windows; U; Windows NT 5.1) AppleWebKit/535.29
 -> 시스템 상에서 대시보드
 
 
+
+### 1차 전처리
+
+```python
+data = {
+    "originer": "원본 로그",
+    "ip" : "64.233.172.14",
+    "timezone" : "16/Apr/2023:05:33:21 +0900",
+    "method" : "PUT",
+    "resource" : "/app/main/posts",   
+    "header" : "HTTP/1.0",
+    "status" : 200,
+    "port" : 5055,
+    "url" : "http://www.harrell.info/wp-content/wp-content/list/search.html" ,
+    "device" : "http://lee.info/" "Mozilla/5.0 (Linux; Android 3.2.4) AppleWebKit/532.0 (KHTML, like Gecko)",
+    "brower_info" : "Chrome/51.0.819.0 Safari/532.0",
+}
+```
+
+
+### 2차 전처리
+
+```python
+data = {
+    "originer": "원본 로그",
+    "ip" : "64.233.172.14",
+    "timezone" : "14/Apr/2023:01:14:35",
+    "date" : "14/Apr/2023",
+    "time" : "01:14:35"
+    ""
+    "method" : "PUT",
+    "resource" : "/app/main/posts",   
+    "header" : "HTTP/1.0",
+    "status" : 200,
+    "port" : 5055,
+    "url" : "http://www.harrell.info/wp-content/wp-content/list/search.html" ,
+    "device" : "http://lee.info/" "Mozilla/5.0 (Linux; Android 3.2.4) AppleWebKit/532.0 (KHTML, like Gecko)",
+    "brower_info" : "Chrome/51.0.819.0 Safari/532.0",
+}
+```
