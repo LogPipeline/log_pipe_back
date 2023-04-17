@@ -1,0 +1,40 @@
+version: '3.9'
+
+services: 
+  backend:
+    container_name: data-django
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/:/backend
+      - static-volume:/backend/static/
+    command:
+      - /bin/sh
+      - -c
+      - /usr/src/local/entrypoint.sh
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+
+  ngnix:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: data-nginx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx/nginx-setup.conf:/etc/nginx/con.f/nginx-setup.conf
+      - static-volume:/backend/static/
+
+    depends_on:
+      - backend
+
+
+volumes:
+  backend:
+  nginx:
+  build_file:
+  static-volume:
