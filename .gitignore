@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# python migrations 
+# **/migrations/**
+# !**/migrations
+# !**/migrations/__init__.py
+backend/config/static/
