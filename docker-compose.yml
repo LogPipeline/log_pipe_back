@@ -1,6 +1,26 @@
 version: '3.9'
 
 services: 
+  sql:
+      container_name: data-sql
+      image: mysql
+      ports:
+        - "3307:3306"
+      env_file:
+        - ./.env
+      environment:
+        - MYSQL_DATABASE=${DB_DATABASE}
+        - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+        - MYSQL_USERNAME=${DB_USERNAME}
+        - TZ=Asia/Seoul
+      command:
+        - --default-authentication-plugin=mysql_native_password
+        - --collation-server=utf8mb4_unicode_ci
+        - --character-set-server=utf8mb4
+        - --lower_case_table_names=1
+      volumes:
+        - .sqlVolume:/var/lib/mysql
+
   backend:
     container_name: data-django
     build: 
@@ -17,6 +37,8 @@ services:
       - ./.env
     ports:
       - "8000:8000"
+    depends_on:
+      - sql 
 
   ngnix:
     build: 
@@ -24,17 +46,18 @@ services:
       dockerfile: Dockerfile
     container_name: data-nginx
     ports:
-      - "8080:8080"
+      - "8081:8081"
     volumes:
       - ./nginx/nginx-setup.conf:/etc/nginx/con.f/nginx-setup.conf
       - static-volume:/backend/static/
 
     depends_on:
       - backend
-
+      
 
 volumes:
-  backend:
+  sql:
   nginx:
+  backend:
   build_file:
   static-volume:

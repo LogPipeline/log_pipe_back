@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.8.2
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
@@ -15,5 +15,3 @@ COPY . /backend/
 
 RUN ["chmod", "+x", "/usr/src/local/entrypoint.sh"]
 
-# static file 
-RUN python manage.py collectstatic --no-input
