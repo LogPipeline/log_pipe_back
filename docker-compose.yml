@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend/:/backend
-      - static-volume:/backend/static/
+      - static-volume:/backend/config/static/
     command:
       - /bin/sh
       - -c
@@ -49,7 +49,7 @@ services:
       - "8081:8081"
     volumes:
       - ./nginx/nginx-setup.conf:/etc/nginx/con.f/nginx-setup.conf
-      - static-volume:/backend/static/
+      - static-volume:/backend/config/static/
 
     depends_on:
       - backend

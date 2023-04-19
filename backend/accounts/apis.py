@@ -15,7 +15,7 @@ from drf_yasg.utils import swagger_auto_schema
 class LoginAPI(APIView):
     permission_classes = (AllowAny, )
     
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> Response:
         login_serializer = self.serializer_class(data=request.data)
         if login_serializer.is_valid(raise_exception=False):
             login = login_serializer.validate(data=request.data)

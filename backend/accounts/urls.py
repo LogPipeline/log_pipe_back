@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
 from . import apis
 
 # api modelviewset setting 
-app_name = "auth"
+app_name = "accounts"
 
 
 urlpatterns = [
