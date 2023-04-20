@@ -7,6 +7,7 @@ django-ninja
 djangorestframework-simplejwt
 django-extensions
 drf-yasg
+channels
 
 libsass 
 django-compressor 

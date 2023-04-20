@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'channels'
       
     # application
     'logdash',
@@ -83,7 +84,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+ASGI_APPLICATION = 'config.routing.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
