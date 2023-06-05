@@ -3,10 +3,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.models import AdminUser
+from authentication.models import AdminUser
 from argon2.exceptions import VerifyMismatchError
 from argon2 import PasswordHasher
-from rest_framework import serializers
 
 
 # 회원 가입 및 정보 수정 일원화 
@@ -27,11 +26,11 @@ class RegisterSerializer(serializers.ModelSerializer):
             return data
         raise ValidationError(detail="비밀번호가 같지 않습니다", code="password_mismatch")
         
-    def create(self, validated_data: Dict) -> None:
-        del validated_data["password2"]
+    def create(self, validated_data: Dict) -> Any:
+        password = validated_data.pop("password")
+        validated_data.pop("password2")
         
-        password: str = validated_data["password"]
-        user_save = super().create(validated_data)
+        user_save = super().create(password)
         user_save.set_password(password)
         user_save.save()
         
@@ -52,19 +51,43 @@ class LoginSerializer(serializers.ModelSerializer):
         fields: List[str] = ["email", "password"]
 
 
-    def validate(self, data: Any) -> Dict[str, Any]:
-        email: str = data.get("email")
-        password: PasswordHasher = data.get("password")
+    # def validate(self, data: Any) -> Dict[str, Any]:
+    #     email: str = data.get("email")
+    #     password: PasswordHasher = data.get("password")
+        
+    #     try:
+    #         user = self.Meta.model.objects.get(email=email)
+    #         user_password: PasswordHasher = user.password 
+    #         pc: bool = PasswordHasher().verify(str(user_password).strip("argon2"), password)
+    #         if pc:
+    #             token: Any = RefreshToken.for_user(user)
+    #             refresh = str(token)
+    #             access = str(token.access_token)
+    #             data: Dict[str, Any] = {
+    #                 "msg": "로그인 성공",
+    #                 "info": {
+    #                     "email": user.email,
+    #                     "refresh": refresh,
+    #                     'access': access
+    #                 }
+    #             }
+    #             return data
+    #     except (self.Meta.model.DoesNotExist, VerifyMismatchError):
+    #         raise ValidationError(self.error_messages)
+
+    def validate(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        email = data.get("email")
+        password = data.get("password")
         
         try:
             user = self.Meta.model.objects.get(email=email)
-            user_password: PasswordHasher = user.password 
-            pc: bool = PasswordHasher().verify(str(user_password).strip("argon2"), password)
-            if pc:
-                token: Any = RefreshToken.for_user(user)
+            user_password = user.password 
+            password_hasher = PasswordHasher()
+            if password_hasher.verify(user_password, password):
+                token = RefreshToken.for_user(user)
                 refresh = str(token)
                 access = str(token.access_token)
-                data: Dict[str, Any] = {
+                data = {
                     "msg": "로그인 성공",
                     "info": {
                         "email": user.email,
@@ -73,8 +96,10 @@ class LoginSerializer(serializers.ModelSerializer):
                     }
                 }
                 return data
-        except (self.Meta.model.DoesNotExist, VerifyMismatchError):
-            raise ValidationError(self.error_messages)
+        except AdminUser.DoesNotExist:
+            raise ValidationError({"non_field_errors": ["유효하지 않은 사용자입니다."]})
+        except VerifyMismatchError:
+            raise ValidationError({"non_field_errors": ["비밀번호가 일치하지 않습니다."]})
         
         
         

@@ -4,7 +4,9 @@ from .common import *
 DEBUG = True # SECURITY WARNING: don't run with debug turned on in production!
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["http://0.0.0.0:8080", "http://127.0.0.1:8000", "http://0.0.0.0:8081"]
+CSRF_TRUSTED_ORIGINS = ["http://0.0.0.0:8080", 
+                        "http://127.0.0.1:8000", 
+                        "http://0.0.0.0:8081"]
 
 
 

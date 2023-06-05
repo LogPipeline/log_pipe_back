@@ -11,18 +11,21 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# AUTH_USER_MODEL = 'logdash.UserInfomer'
+dotenv_path = os.path.join(BASE_DIR.parent.parent, ".env")
+load_dotenv(dotenv_path=dotenv_path)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
-AUTH_USER_MODEL = "accounts.AdminUser"
+AUTH_USER_MODEL = "authentication.AdminUser"
 
 
 # Application definition
@@ -39,11 +42,10 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework_simplejwt',
     'drf_yasg',
-    'channels'
       
     # application
-    'logdash',
-    'accounts',
+    'page.dashboard',
+    'page.authentication',
 ]
 
 MIDDLEWARE = [

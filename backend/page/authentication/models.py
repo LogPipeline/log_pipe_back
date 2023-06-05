@@ -9,7 +9,6 @@ from typing import List, Any
 from argon2 import PasswordHasher
 
 
-# 계정 injectionally
 # 프로토콜 설정 
 class UserManager(BaseUserManager):
     use_in_migrations: bool = True
