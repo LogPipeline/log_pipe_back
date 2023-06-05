@@ -133,3 +133,4 @@ dmypy.json
 # !**/migrations
 # !**/migrations/__init__.py
 backend/config/static/
+backend/config/entrypoint.sh
