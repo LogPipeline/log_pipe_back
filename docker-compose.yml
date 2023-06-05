@@ -20,6 +20,11 @@ services:
         - --lower_case_table_names=1
       volumes:
         - .sqlVolume:/var/lib/mysql
+      healthcheck:
+        test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD']
+        interval: 10s
+        timeout: 2s
+        retries: 100
 
   backend:
     container_name: data-django
@@ -38,7 +43,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - sql 
+      sql:
+        condition: service_healthy      
 
   ngnix:
     build: 
