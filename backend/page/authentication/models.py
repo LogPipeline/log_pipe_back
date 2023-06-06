@@ -1,11 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser, PermissionsMixin, 
+    BaseUserManager, 
+    AbstractBaseUser, 
+    PermissionsMixin, 
 )
 from django.core.validators import MinLengthValidator
 
-from typing import List, Any
+from typing import List, Any, Dict
 from argon2 import PasswordHasher
 
 
@@ -13,7 +15,12 @@ from argon2 import PasswordHasher
 class UserManager(BaseUserManager):
     use_in_migrations: bool = True
     
-    def _create_superuser(self, email: str, name: str, password: PasswordHasher, **extra_field):           
+    def _create_superuser(self, 
+                          email: str, 
+                          name: str, 
+                          password: PasswordHasher,
+                          **extra_field: Dict[str, Any]
+        ) -> Any:           
         user = self.model(
             email=self.normalize_email(email),
             name=name,
@@ -25,13 +32,18 @@ class UserManager(BaseUserManager):
         
         return user
 
-    def create_superuser(self, email: str, name: str, password: PasswordHasher, **extra_fields):
+    def create_superuser(self, 
+                         email: str, 
+                         name: str, 
+                         password: PasswordHasher, 
+                         **extra_fields: Dict[str, Any]
+        ) -> Any:
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_admin", True)
         extra_fields.setdefault("is_superuser", True)
         
         if extra_fields.get("is_staff") is not True:
-            raise ValueError("슈퍼유저 권한은 관리자에게 문의하세요")
+            raise ValueError("스태프 권한은 관리자에게 문의하세요")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("슈퍼유저 권한은 관리자에게 문의하세요")
         
@@ -40,16 +52,24 @@ class UserManager(BaseUserManager):
     
 class BasicInform(models.Model):
     name = models.CharField(
-        verbose_name=_("name"), max_length=6, 
-        blank=False, null=False
+        verbose_name=_("name"), 
+        max_length=6, 
+        blank=False, 
+        null=False
     )
     email = models.EmailField(
-        verbose_name=_("email"), max_length=50, 
-        blank=False, null=False, unique=True,
+        verbose_name=_("email"), 
+        max_length=50, 
+        blank=False, 
+        null=False, 
+        unique=True,
     )
     password = models.CharField(
-        verbose_name=_("password"), max_length=128,
-        blank=False, null=False, validators=[MinLengthValidator(8, message="8자 이상 입력해주세요..!")]
+        verbose_name=_("password"), 
+        max_length=128,
+        blank=False,
+        null=False, 
+        validators=[MinLengthValidator(8, message="8자 이상 입력해주세요..!")]
     )
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
